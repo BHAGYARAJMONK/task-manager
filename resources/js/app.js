@@ -1,9 +1,15 @@
+import { createApp, h } from 'vue';
+import { createInertiaApp } from '@inertiajs/vue3';
+import { InertiaProgress } from '@inertiajs/progress'; // Optional: for a progress bar
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { createApp } from 'vue';
-import App from './App.vue';
-import router from './router';
+InertiaProgress.init(); // Optional: to initialize the progress bar
 
-const app = createApp(App);
-app.use(router); 
-app.mount('#app');
+createInertiaApp({
+    resolve: name => import(`./Pages/${name}.vue`), // Use `import` instead of `require`
+    setup({ el, App, props, plugin }) {
+        createApp({ render: () => h(App, props) })
+            .use(plugin)
+            .mount(el);
+    },
+});
